@@ -1,0 +1,138 @@
+/**
+ * Frontend Styles for Easy FAQ and HowTo Schema
+ */
+
+/* FAQ Container */
+.easy-faq-container {
+    margin: 30px 0;
+}
+
+.easy-faq-item {
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.easy-faq-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.easy-faq-question {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.easy-faq-answer {
+    color: #555;
+    line-height: 1.6;
+}
+
+.easy-faq-answer p:last-child {
+    margin-bottom: 0;
+}
+
+/* HowTo Container */
+.easy-howto-container {
+    margin: 30px 0;
+    padding: 25px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.easy-howto-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+    color: #333;
+}
+
+.easy-howto-description {
+    margin-bottom: 20px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.easy-howto-time {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background: #fff;
+    border-left: 4px solid #2271b1;
+    color: #333;
+}
+
+.easy-howto-time strong {
+    color: #2271b1;
+}
+
+.easy-howto-steps {
+    list-style: none;
+    counter-reset: step-counter;
+    padding-left: 0;
+    margin: 20px 0 0 0;
+}
+
+.easy-howto-step {
+    counter-increment: step-counter;
+    position: relative;
+    padding: 20px 20px 20px 60px;
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.easy-howto-step::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 15px;
+    top: 20px;
+    width: 35px;
+    height: 35px;
+    background: #2271b1;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.easy-howto-step-name {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.easy-howto-step-text {
+    color: #555;
+    line-height: 1.6;
+}
+
+.easy-howto-step-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .easy-howto-container {
+        padding: 20px 15px;
+    }
+
+    .easy-howto-step {
+        padding: 15px 15px 15px 55px;
+    }
+
+    .easy-howto-step::before {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+        left: 12px;
+        top: 15px;
+    }
+}

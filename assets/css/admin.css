@@ -1,0 +1,164 @@
+/**
+ * Admin Styles for Easy FAQ and HowTo Schema
+ */
+
+/* Metabox Container */
+.easy-faq-howto-metabox {
+    padding: 10px 0;
+}
+
+.metabox-description {
+    background: #f0f0f1;
+    border-left: 4px solid #2271b1;
+    padding: 12px;
+    margin-bottom: 20px;
+}
+
+.metabox-description p {
+    margin: 5px 0;
+}
+
+.metabox-description code {
+    background: #fff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+/* FAQ Items */
+.faq-items-container,
+.howto-steps-container {
+    margin-bottom: 15px;
+}
+
+.faq-item,
+.howto-step {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    transition: box-shadow 0.2s;
+}
+
+.faq-item:hover,
+.howto-step:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.faq-item-header,
+.howto-step-header {
+    background: #f6f7f7;
+    border-bottom: 1px solid #c3c4c7;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+}
+
+.faq-item-number,
+.howto-step-number {
+    font-weight: 600;
+    color: #2271b1;
+    font-size: 14px;
+}
+
+.remove-item {
+    color: #d63638;
+    text-decoration: none;
+    padding: 4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.remove-item:hover {
+    color: #a00;
+}
+
+.remove-item .dashicons {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+}
+
+.faq-item-content,
+.howto-step-content {
+    padding: 15px;
+}
+
+.faq-item-content label,
+.howto-step-content label {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.faq-item-content label:last-child,
+.howto-step-content label:last-child {
+    margin-bottom: 0;
+}
+
+.faq-item-content strong,
+.howto-step-content strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #1d2327;
+}
+
+.faq-item-content input[type="text"],
+.faq-item-content textarea,
+.howto-step-content input[type="text"],
+.howto-step-content textarea {
+    width: 100%;
+}
+
+/* HowTo Metadata */
+.howto-metadata {
+    background: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.howto-metadata label {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.howto-metadata label:last-child {
+    margin-bottom: 0;
+}
+
+.howto-metadata strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #1d2327;
+}
+
+.howto-metadata .description {
+    display: block;
+    margin-top: 5px;
+    color: #646970;
+    font-style: italic;
+}
+
+/* Buttons */
+.add-faq-item,
+.add-howto-step {
+    margin-top: 10px;
+}
+
+/* Sortable Placeholder */
+.sortable-placeholder {
+    background: #f0f0f1;
+    border: 2px dashed #c3c4c7;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    height: 100px;
+}
+
+/* Template Script (Hidden) */
+script[type="text/template"] {
+    display: none;
+}
