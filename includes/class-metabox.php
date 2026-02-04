@@ -17,6 +17,7 @@ class Easy_FAQ_HowTo_Metabox {
      */
     const FAQ_META_KEY = '_easy_faq_data';
     const HOWTO_META_KEY = '_easy_howto_data';
+    const FAQ_USE_ELEMENTOR_KEY = '_easy_faq_use_elementor';
 
     /**
      * Return an instance of this class.
@@ -108,6 +109,9 @@ class Easy_FAQ_HowTo_Metabox {
         if ( ! is_array( $faq_data ) ) {
             $faq_data = array();
         }
+        
+        $use_elementor = get_post_meta( $post->ID, self::FAQ_USE_ELEMENTOR_KEY, true );
+        $is_elementor = $this->is_elementor_page( $post->ID );
         ?>
         <div class="easy-faq-howto-metabox">
             <div class="metabox-description">
@@ -115,6 +119,18 @@ class Easy_FAQ_HowTo_Metabox {
                 <p><code>[easy_faq]</code></p>
                 <p><?php _e( 'This will add the FAQ content to your post and inject the appropriate schema.org structured data via Yoast SEO.', 'easy-faq-howto-schema' ); ?></p>
             </div>
+
+            <?php if ( $is_elementor ) : ?>
+            <div class="elementor-integration" style="background: #e8f4f8; padding: 15px; margin-bottom: 20px; border-left: 4px solid #00a0d2; border-radius: 4px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" name="easy_faq_use_elementor" value="1" <?php checked( $use_elementor, '1' ); ?> style="margin-right: 10px;" />
+                    <span>
+                        <strong><?php _e( 'Use Elementor Accordion for FAQ Schema', 'easy-faq-howto-schema' ); ?></strong><br>
+                        <small style="color: #666;"><?php _e( 'Automatically extract FAQ data from Elementor Accordion widgets on this page. The accordion items will be used for schema.org structured data.', 'easy-faq-howto-schema' ); ?></small>
+                    </span>
+                </label>
+            </div>
+            <?php endif; ?>
 
             <div class="faq-items-container" data-type="faq">
                 <?php
@@ -288,6 +304,13 @@ class Easy_FAQ_HowTo_Metabox {
             } else {
                 delete_post_meta( $post_id, self::FAQ_META_KEY );
             }
+
+            // Save Elementor integration flag
+            if ( isset( $_POST['easy_faq_use_elementor'] ) ) {
+                update_post_meta( $post_id, self::FAQ_USE_ELEMENTOR_KEY, '1' );
+            } else {
+                delete_post_meta( $post_id, self::FAQ_USE_ELEMENTOR_KEY );
+            }
         }
 
         // Save HowTo data
@@ -331,4 +354,133 @@ class Easy_FAQ_HowTo_Metabox {
             }
         }
     }
+
+    /**
+     * Check if post is built with Elementor
+     *
+     * @param int $post_id Post ID.
+     * @return bool
+     */
+    private function is_elementor_page( $post_id ) {
+        if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
+            return false;
+        }
+
+        $document = get_post_meta( $post_id, '_elementor_edit_mode', true );
+        return ! empty( $document );
+    }
+
+    /**
+     * Extract FAQ data from Elementor accordion widgets
+     *
+     * @param int $post_id Post ID.
+     * @return array FAQ data extracted from Elementor.
+     */
+    public static function get_elementor_accordion_data( $post_id ) {
+        $elementor_data = get_post_meta( $post_id, '_elementor_data', true );
+        if ( empty( $elementor_data ) ) {
+            return array();
+        }
+
+        // Elementor data might be a string or already an array
+        if ( is_string( $elementor_data ) ) {
+            $elements = json_decode( $elementor_data, true );
+        } else {
+            $elements = $elementor_data;
+        }
+
+        if ( ! is_array( $elements ) ) {
+            return array();
+        }
+
+        $faq_data = array();
+        self::parse_elementor_elements( $elements, $faq_data );
+
+        return $faq_data;
+    }
+
+    /**
+     * Recursively parse Elementor elements to find accordion widgets
+     *
+     * @param array $elements Elementor elements.
+     * @param array &$faq_data FAQ data array to populate.
+     */
+    private static function parse_elementor_elements( $elements, &$faq_data ) {
+        if ( ! is_array( $elements ) ) {
+            return;
+        }
+
+        foreach ( $elements as $element ) {
+            if ( ! is_array( $element ) ) {
+                continue;
+            }
+
+            // Check for nested-accordion widget (Elementor Pro)
+            if ( isset( $element['widgetType'] ) && $element['widgetType'] === 'nested-accordion' ) {
+                if ( isset( $element['settings']['items'] ) && is_array( $element['settings']['items'] ) ) {
+                    $titles = $element['settings']['items'];
+                    $contents = array();
+                    
+                    // Extract content from child elements
+                    if ( isset( $element['elements'] ) && is_array( $element['elements'] ) ) {
+                        foreach ( $element['elements'] as $child ) {
+                            if ( isset( $child['elements'] ) && is_array( $child['elements'] ) ) {
+                                foreach ( $child['elements'] as $inner ) {
+                                    if ( isset( $inner['widgetType'] ) && $inner['widgetType'] === 'text-editor' ) {
+                                        if ( isset( $inner['settings']['editor'] ) ) {
+                                            $contents[] = $inner['settings']['editor'];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Match titles with contents
+                    foreach ( $titles as $index => $title_data ) {
+                        if ( ! empty( $title_data['item_title'] ) ) {
+                            $faq_data[] = array(
+                                'question' => wp_strip_all_tags( $title_data['item_title'] ),
+                                'answer' => isset( $contents[ $index ] ) ? wp_kses_post( $contents[ $index ] ) : ''
+                            );
+                        }
+                    }
+                }
+            }
+
+            // Check for classic accordion widget
+            if ( isset( $element['widgetType'] ) && $element['widgetType'] === 'accordion' ) {
+                if ( isset( $element['settings']['tabs'] ) && is_array( $element['settings']['tabs'] ) ) {
+                    foreach ( $element['settings']['tabs'] as $tab ) {
+                        if ( ! empty( $tab['tab_title'] ) ) {
+                            $faq_data[] = array(
+                                'question' => wp_strip_all_tags( $tab['tab_title'] ),
+                                'answer' => isset( $tab['tab_content'] ) ? wp_kses_post( $tab['tab_content'] ) : ''
+                            );
+                        }
+                    }
+                }
+            }
+
+            // Check for toggle widget (similar to accordion)
+            if ( isset( $element['widgetType'] ) && $element['widgetType'] === 'toggle' ) {
+                if ( isset( $element['settings']['tabs'] ) && is_array( $element['settings']['tabs'] ) ) {
+                    foreach ( $element['settings']['tabs'] as $tab ) {
+                        if ( ! empty( $tab['tab_title'] ) ) {
+                            $faq_data[] = array(
+                                'question' => wp_strip_all_tags( $tab['tab_title'] ),
+                                'answer' => isset( $tab['tab_content'] ) ? wp_kses_post( $tab['tab_content'] ) : ''
+                            );
+                        }
+                    }
+                }
+            }
+
+            // Recursively check child elements
+            if ( isset( $element['elements'] ) && is_array( $element['elements'] ) ) {
+                self::parse_elementor_elements( $element['elements'], $faq_data );
+            }
+        }
+    }
 }
+

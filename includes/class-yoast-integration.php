@@ -171,7 +171,14 @@ class Easy_FAQ_Schema_Piece {
         }
 
         $post_id = get_the_ID();
-        $faq_data = get_post_meta( $post_id, Easy_FAQ_HowTo_Metabox::FAQ_META_KEY, true );
+        
+        // Check if using Elementor accordion
+        $use_elementor = get_post_meta( $post_id, Easy_FAQ_HowTo_Metabox::FAQ_USE_ELEMENTOR_KEY, true );
+        if ( $use_elementor ) {
+            $faq_data = Easy_FAQ_HowTo_Metabox::get_elementor_accordion_data( $post_id );
+        } else {
+            $faq_data = get_post_meta( $post_id, Easy_FAQ_HowTo_Metabox::FAQ_META_KEY, true );
+        }
 
         if ( empty( $faq_data ) || ! is_array( $faq_data ) ) {
             return false;
@@ -212,7 +219,14 @@ class Easy_FAQ_Schema_Piece {
      */
     public function generate() {
         $post_id = get_the_ID();
-        $faq_data = get_post_meta( $post_id, Easy_FAQ_HowTo_Metabox::FAQ_META_KEY, true );
+        
+        // Check if using Elementor accordion
+        $use_elementor = get_post_meta( $post_id, Easy_FAQ_HowTo_Metabox::FAQ_USE_ELEMENTOR_KEY, true );
+        if ( $use_elementor ) {
+            $faq_data = Easy_FAQ_HowTo_Metabox::get_elementor_accordion_data( $post_id );
+        } else {
+            $faq_data = get_post_meta( $post_id, Easy_FAQ_HowTo_Metabox::FAQ_META_KEY, true );
+        }
 
         if ( empty( $faq_data ) ) {
             return array();

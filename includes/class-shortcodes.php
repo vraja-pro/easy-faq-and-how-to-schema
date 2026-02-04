@@ -60,6 +60,13 @@ class Easy_FAQ_HowTo_Shortcodes {
             return '';
         }
 
+        // Check if using Elementor accordion
+        $use_elementor = get_post_meta( $post->ID, Easy_FAQ_HowTo_Metabox::FAQ_USE_ELEMENTOR_KEY, true );
+        if ( $use_elementor ) {
+            // Don't display via shortcode if using Elementor accordion (it's already visible on page)
+            return '<!-- FAQ Schema: Using Elementor Accordion -->';
+        }
+
         $faq_data = get_post_meta( $post->ID, Easy_FAQ_HowTo_Metabox::FAQ_META_KEY, true );
 
         if ( empty( $faq_data ) || ! is_array( $faq_data ) ) {
