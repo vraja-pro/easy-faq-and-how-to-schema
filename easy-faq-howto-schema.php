@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Easy FAQ and HowTo Schema
- * Plugin URI: https://github.com/yourusername/easy-faq-howto-schema
+ * Plugin URI: https://github.com/vraja-pro/easy-faq-howto-schema
  * Description: Adds FAQ and HowTo structured data via metabox, shortcode, and Yoast SEO integration
  * Version: 1.0.0
- * Author: Your Name
- * Author URI: https://yourwebsite.com
+ * Author: Vraja Das
+ * Author URI: https://github.com/vraja-pro
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: easy-faq-howto-schema
